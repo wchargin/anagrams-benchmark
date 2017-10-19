@@ -18,7 +18,7 @@ public class RandomCorpus implements Corpus {
         return new RandomCorpus(rng, true);
     }
 
-    public static RandomCorpus nonBmpOnly(Random rng) {
+    public static RandomCorpus fullSpectrum(Random rng) {
         return new RandomCorpus(rng, false);
     }
 
