@@ -17,6 +17,7 @@ Invoke `gradle build` or `gradle run` in the root directory.
 Constructing corpora...
 --- Random, BMP only
 --- Random, full spectrum
+--- Supercollider
 --- Natural language, english.txt
 --- Natural language, greek.txt
 --- Natural language, phoenician.txt
@@ -24,65 +25,77 @@ Warming up...
 Beginning timing.
 
 Corpus: RandomCorpus[] (size: 1000000; BMP-only: true)
-StreamsAnagramFinder          BMPAlphabetizer               (   666.0 +/-  11.9) ms  errors=0
-StreamsAnagramFinder          ManualDecodeAlphabetizer      (   858.7 +/-   6.6) ms  errors=0
-StreamsAnagramFinder          ManualCodecAlphabetizer       (   844.7 +/-   3.7) ms  errors=0
-StreamsAnagramFinder          BuiltinDecodeAlphabetizer     (  1080.2 +/-   4.7) ms  errors=0
-StreamsAnagramFinder          BuiltinCodecAlphabetizer      (   958.1 +/-   7.9) ms  errors=0
-IterativeAnagramsFinder       BMPAlphabetizer               (   647.7 +/-  10.7) ms  errors=0
-IterativeAnagramsFinder       ManualDecodeAlphabetizer      (   786.5 +/-   9.4) ms  errors=0
-IterativeAnagramsFinder       ManualCodecAlphabetizer       (   789.9 +/-   6.8) ms  errors=0
-IterativeAnagramsFinder       BuiltinDecodeAlphabetizer     (  1039.2 +/-   7.2) ms  errors=0
-IterativeAnagramsFinder       BuiltinCodecAlphabetizer      (   959.1 +/-  10.6) ms  errors=0
+StreamsAnagramFinder          BMPAlphabetizer               (   640.9 +/-  11.4) ms  errors=0
+StreamsAnagramFinder          ManualDecodeAlphabetizer      (   801.3 +/-   6.2) ms  errors=0
+StreamsAnagramFinder          ManualCodecAlphabetizer       (   849.9 +/-  10.2) ms  errors=0
+StreamsAnagramFinder          BuiltinDecodeAlphabetizer     (  1047.3 +/-  11.4) ms  errors=0
+StreamsAnagramFinder          BuiltinCodecAlphabetizer      (  1002.8 +/-  18.1) ms  errors=0
+IterativeAnagramsFinder       BMPAlphabetizer               (   700.1 +/-   1.9) ms  errors=0
+IterativeAnagramsFinder       ManualDecodeAlphabetizer      (   846.4 +/-   8.7) ms  errors=0
+IterativeAnagramsFinder       ManualCodecAlphabetizer       (   836.7 +/-   8.9) ms  errors=0
+IterativeAnagramsFinder       BuiltinDecodeAlphabetizer     (  1058.8 +/-  20.5) ms  errors=0
+IterativeAnagramsFinder       BuiltinCodecAlphabetizer      (  1009.5 +/-  12.5) ms  errors=0
 
 Corpus: RandomCorpus[] (size: 1000000; BMP-only: false)
-StreamsAnagramFinder          BMPAlphabetizer               (   959.1 +/-   5.1) ms  errors=49313
-StreamsAnagramFinder          ManualDecodeAlphabetizer      (   917.5 +/-  12.1) ms  errors=0
-StreamsAnagramFinder          ManualCodecAlphabetizer       (   911.4 +/-  12.3) ms  errors=0
-StreamsAnagramFinder          BuiltinDecodeAlphabetizer     (  1167.1 +/-  11.6) ms  errors=0
-StreamsAnagramFinder          BuiltinCodecAlphabetizer      (   995.7 +/-   5.2) ms  errors=0
-IterativeAnagramsFinder       BMPAlphabetizer               (   953.4 +/-   3.1) ms  errors=49313
-IterativeAnagramsFinder       ManualDecodeAlphabetizer      (   943.9 +/-   6.4) ms  errors=0
-IterativeAnagramsFinder       ManualCodecAlphabetizer       (   878.2 +/-   9.0) ms  errors=0
-IterativeAnagramsFinder       BuiltinDecodeAlphabetizer     (  1114.1 +/-   5.3) ms  errors=0
-IterativeAnagramsFinder       BuiltinCodecAlphabetizer      (   955.2 +/-   6.6) ms  errors=0
+StreamsAnagramFinder          BMPAlphabetizer               (   964.2 +/-   9.3) ms  errors=49313
+StreamsAnagramFinder          ManualDecodeAlphabetizer      (   964.6 +/-  10.2) ms  errors=0
+StreamsAnagramFinder          ManualCodecAlphabetizer       (   898.7 +/-   8.0) ms  errors=0
+StreamsAnagramFinder          BuiltinDecodeAlphabetizer     (  1163.9 +/-  10.3) ms  errors=0
+StreamsAnagramFinder          BuiltinCodecAlphabetizer      (  1016.5 +/-  12.4) ms  errors=0
+IterativeAnagramsFinder       BMPAlphabetizer               (   869.7 +/-   4.4) ms  errors=49313
+IterativeAnagramsFinder       ManualDecodeAlphabetizer      (   942.5 +/-  14.7) ms  errors=0
+IterativeAnagramsFinder       ManualCodecAlphabetizer       (   906.3 +/-   5.9) ms  errors=0
+IterativeAnagramsFinder       BuiltinDecodeAlphabetizer     (  1150.7 +/-   9.9) ms  errors=0
+IterativeAnagramsFinder       BuiltinCodecAlphabetizer      (  1019.9 +/-   9.6) ms  errors=0
+
+Corpus: SupercolliderCorpus[] (size: 531441; BMP-only: false)
+StreamsAnagramFinder          BMPAlphabetizer               (   262.1 +/-   0.4) ms  errors=3469
+StreamsAnagramFinder          ManualDecodeAlphabetizer      (   349.2 +/-   4.6) ms  errors=0
+StreamsAnagramFinder          ManualCodecAlphabetizer       (   357.2 +/-   5.7) ms  errors=0
+StreamsAnagramFinder          BuiltinDecodeAlphabetizer     (   492.9 +/-   9.6) ms  errors=0
+StreamsAnagramFinder          BuiltinCodecAlphabetizer      (   441.3 +/-   7.2) ms  errors=0
+IterativeAnagramsFinder       BMPAlphabetizer               (   260.8 +/-   4.2) ms  errors=3469
+IterativeAnagramsFinder       ManualDecodeAlphabetizer      (   341.9 +/-   4.6) ms  errors=0
+IterativeAnagramsFinder       ManualCodecAlphabetizer       (   359.3 +/-   5.6) ms  errors=0
+IterativeAnagramsFinder       BuiltinDecodeAlphabetizer     (   506.4 +/-   6.5) ms  errors=0
+IterativeAnagramsFinder       BuiltinCodecAlphabetizer      (   434.2 +/-   2.2) ms  errors=0
 
 Corpus: DictionaryCorpus[english.txt] (size: 64001; BMP-only: true)
-StreamsAnagramFinder          BMPAlphabetizer               (    20.6 +/-   0.1) ms  errors=0
-StreamsAnagramFinder          ManualDecodeAlphabetizer      (    34.1 +/-   0.1) ms  errors=0
-StreamsAnagramFinder          ManualCodecAlphabetizer       (    38.1 +/-   0.2) ms  errors=0
-StreamsAnagramFinder          BuiltinDecodeAlphabetizer     (    45.3 +/-   0.3) ms  errors=0
-StreamsAnagramFinder          BuiltinCodecAlphabetizer      (    41.0 +/-   0.3) ms  errors=0
+StreamsAnagramFinder          BMPAlphabetizer               (    20.3 +/-   0.1) ms  errors=0
+StreamsAnagramFinder          ManualDecodeAlphabetizer      (    32.6 +/-   0.2) ms  errors=0
+StreamsAnagramFinder          ManualCodecAlphabetizer       (    36.4 +/-   0.3) ms  errors=0
+StreamsAnagramFinder          BuiltinDecodeAlphabetizer     (    45.6 +/-   0.4) ms  errors=0
+StreamsAnagramFinder          BuiltinCodecAlphabetizer      (    42.4 +/-   0.2) ms  errors=0
 IterativeAnagramsFinder       BMPAlphabetizer               (    19.3 +/-   0.1) ms  errors=0
-IterativeAnagramsFinder       ManualDecodeAlphabetizer      (    32.0 +/-   0.2) ms  errors=0
-IterativeAnagramsFinder       ManualCodecAlphabetizer       (    35.4 +/-   0.2) ms  errors=0
-IterativeAnagramsFinder       BuiltinDecodeAlphabetizer     (    43.2 +/-   0.4) ms  errors=0
-IterativeAnagramsFinder       BuiltinCodecAlphabetizer      (    39.2 +/-   0.3) ms  errors=0
+IterativeAnagramsFinder       ManualDecodeAlphabetizer      (    32.2 +/-   0.2) ms  errors=0
+IterativeAnagramsFinder       ManualCodecAlphabetizer       (    35.6 +/-   0.1) ms  errors=0
+IterativeAnagramsFinder       BuiltinDecodeAlphabetizer     (    45.2 +/-   0.5) ms  errors=0
+IterativeAnagramsFinder       BuiltinCodecAlphabetizer      (    41.1 +/-   0.2) ms  errors=0
 
 Corpus: DictionaryCorpus[greek.txt] (size: 530760; BMP-only: true)
-StreamsAnagramFinder          BMPAlphabetizer               (   271.3 +/-  12.9) ms  errors=0
-StreamsAnagramFinder          ManualDecodeAlphabetizer      (   762.1 +/- 271.0) ms  errors=0
-StreamsAnagramFinder          ManualCodecAlphabetizer       (   482.6 +/-  12.3) ms  errors=0
-StreamsAnagramFinder          BuiltinDecodeAlphabetizer     (   598.0 +/-  26.5) ms  errors=0
-StreamsAnagramFinder          BuiltinCodecAlphabetizer      (   484.8 +/-  15.9) ms  errors=0
-IterativeAnagramsFinder       BMPAlphabetizer               (   256.7 +/-  12.6) ms  errors=0
-IterativeAnagramsFinder       ManualDecodeAlphabetizer      (   441.1 +/-  20.3) ms  errors=0
-IterativeAnagramsFinder       ManualCodecAlphabetizer       (   450.8 +/-   6.0) ms  errors=0
-IterativeAnagramsFinder       BuiltinDecodeAlphabetizer     (   541.6 +/-  20.0) ms  errors=0
-IterativeAnagramsFinder       BuiltinCodecAlphabetizer      (   428.4 +/-   9.2) ms  errors=0
+StreamsAnagramFinder          BMPAlphabetizer               (   359.8 +/- 111.1) ms  errors=0
+StreamsAnagramFinder          ManualDecodeAlphabetizer      (   461.2 +/-  47.3) ms  errors=0
+StreamsAnagramFinder          ManualCodecAlphabetizer       (   478.3 +/-  17.9) ms  errors=0
+StreamsAnagramFinder          BuiltinDecodeAlphabetizer     (   907.9 +/- 304.2) ms  errors=0
+StreamsAnagramFinder          BuiltinCodecAlphabetizer      (   475.7 +/-  15.2) ms  errors=0
+IterativeAnagramsFinder       BMPAlphabetizer               (   260.7 +/-  12.5) ms  errors=0
+IterativeAnagramsFinder       ManualDecodeAlphabetizer      (   500.5 +/-  37.2) ms  errors=0
+IterativeAnagramsFinder       ManualCodecAlphabetizer       (   464.0 +/-  14.2) ms  errors=0
+IterativeAnagramsFinder       BuiltinDecodeAlphabetizer     (   501.7 +/-   1.3) ms  errors=0
+IterativeAnagramsFinder       BuiltinCodecAlphabetizer      (   465.0 +/-  10.6) ms  errors=0
 
 Corpus: DictionaryCorpus[phoenician.txt] (size: 530760; BMP-only: false)
-StreamsAnagramFinder          BMPAlphabetizer               (   343.1 +/-   9.6) ms  errors=0
-StreamsAnagramFinder          ManualDecodeAlphabetizer      (   496.6 +/-  26.9) ms  errors=0
-StreamsAnagramFinder          ManualCodecAlphabetizer       (   498.2 +/-   3.7) ms  errors=0
-StreamsAnagramFinder          BuiltinDecodeAlphabetizer     (   570.0 +/-  22.5) ms  errors=0
-StreamsAnagramFinder          BuiltinCodecAlphabetizer      (   499.4 +/-  10.6) ms  errors=0
-IterativeAnagramsFinder       BMPAlphabetizer               (   340.2 +/-   3.2) ms  errors=0
-IterativeAnagramsFinder       ManualDecodeAlphabetizer      (   459.3 +/-  10.1) ms  errors=0
-IterativeAnagramsFinder       ManualCodecAlphabetizer       (   489.2 +/-   6.0) ms  errors=0
-IterativeAnagramsFinder       BuiltinDecodeAlphabetizer     (   563.3 +/-  26.9) ms  errors=0
-IterativeAnagramsFinder       BuiltinCodecAlphabetizer      (   473.7 +/-  10.4) ms  errors=0
+StreamsAnagramFinder          BMPAlphabetizer               (   335.9 +/-   7.4) ms  errors=0
+StreamsAnagramFinder          ManualDecodeAlphabetizer      (   489.2 +/-  24.1) ms  errors=0
+StreamsAnagramFinder          ManualCodecAlphabetizer       (   501.8 +/-   9.1) ms  errors=0
+StreamsAnagramFinder          BuiltinDecodeAlphabetizer     (   570.8 +/-  18.6) ms  errors=0
+StreamsAnagramFinder          BuiltinCodecAlphabetizer      (   498.9 +/-  11.9) ms  errors=0
+IterativeAnagramsFinder       BMPAlphabetizer               (   323.3 +/-   2.3) ms  errors=0
+IterativeAnagramsFinder       ManualDecodeAlphabetizer      (   478.0 +/-  19.5) ms  errors=0
+IterativeAnagramsFinder       ManualCodecAlphabetizer       (   499.1 +/-  11.4) ms  errors=0
+IterativeAnagramsFinder       BuiltinDecodeAlphabetizer     (   582.2 +/-  27.5) ms  errors=0
+IterativeAnagramsFinder       BuiltinCodecAlphabetizer      (   497.6 +/-  12.6) ms  errors=0
 
 Done.
-Total runtime: 199.5 s.
+Total runtime: 230.1 s.
 ```

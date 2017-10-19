@@ -39,6 +39,8 @@ public class Benchmark {
         corpora.add(RandomCorpus.bmpOnly(rng));
         System.out.println("--- Random, full spectrum");
         corpora.add(RandomCorpus.fullSpectrum(rng));
+        System.out.println("--- Supercollider");
+        corpora.add(new SupercolliderCorpus());
         try {
             final String[] filenames = { "english.txt", "greek.txt", "phoenician.txt" };
             for (final String filename : filenames) {
