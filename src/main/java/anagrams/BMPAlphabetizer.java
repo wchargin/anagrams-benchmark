@@ -1,3 +1,5 @@
+package anagrams;
+
 import java.util.Arrays;
 
 public class BMPAlphabetizer implements Alphabetizer<String> {

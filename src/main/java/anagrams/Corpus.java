@@ -1,3 +1,5 @@
+package anagrams;
+
 import java.util.List;
 
 public interface Corpus {

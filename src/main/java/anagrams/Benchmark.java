@@ -1,3 +1,5 @@
+package anagrams;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -132,8 +134,8 @@ public class Benchmark {
         final long errors = finalResult.stream().filter(g -> !expected.contains(g)).count() +
                 expected.stream().filter(g -> !finalResult.contains(g)).count();
         System.out.format("%-28s  %-28s  (%8.1f +/- %5.1f) ms  errors=%s%n",
-                finder.getClass().getName(),
-                alphabetizer.getClass().getName(),
+                finder.getClass().getSimpleName(),
+                alphabetizer.getClass().getSimpleName(),
                 mean, stddev, errors);
     }
 }

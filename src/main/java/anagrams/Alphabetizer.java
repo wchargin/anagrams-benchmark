@@ -1,3 +1,5 @@
+package anagrams;
+
 @FunctionalInterface
 public interface Alphabetizer<T> {
     /**
