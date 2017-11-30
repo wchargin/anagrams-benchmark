@@ -129,7 +129,7 @@ public class Benchmark {
         final double stddev =
                 Math.sqrt(DoubleStream.of(timesMillis)
                         .map(x -> Math.pow(x - mean, 2)).sum() / (trials - 1))
-                / Math.sqrt(trials);
+                        / Math.sqrt(trials);
         final Set<Set<String>> finalResult = result;
         final long errors = finalResult.stream().filter(g -> !expected.contains(g)).count() +
                 expected.stream().filter(g -> !finalResult.contains(g)).count();

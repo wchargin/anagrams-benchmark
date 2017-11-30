@@ -16,14 +16,6 @@ public class RandomCorpus implements Corpus {
     private final boolean bmpOnly;
     private final List<String> words;
 
-    public static RandomCorpus bmpOnly(Random rng) {
-        return new RandomCorpus(rng, true);
-    }
-
-    public static RandomCorpus fullSpectrum(Random rng) {
-        return new RandomCorpus(rng, false);
-    }
-
     private RandomCorpus(Random rng, boolean bmpOnly) {
         this.bmpOnly = bmpOnly;
         if (bmpOnly) {
@@ -31,6 +23,14 @@ public class RandomCorpus implements Corpus {
         } else {
             words = generateArbitraryWords(rng);
         }
+    }
+
+    public static RandomCorpus bmpOnly(Random rng) {
+        return new RandomCorpus(rng, true);
+    }
+
+    public static RandomCorpus fullSpectrum(Random rng) {
+        return new RandomCorpus(rng, false);
     }
 
     private static List<String> generateBmpWords(Random rng) {
