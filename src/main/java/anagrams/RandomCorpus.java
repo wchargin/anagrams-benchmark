@@ -5,6 +5,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * A corpus containing words with random Unicode code points, which may be restricted to the
+ * Basic Multilingual Plane ({@link #bmpOnly(Random)}) or may include characters from other
+ * planes ({@link #fullSpectrum(Random)}).
+ */
 public class RandomCorpus implements Corpus {
 
     private static final int MINIMUM_WORD_LENGTH = 3;

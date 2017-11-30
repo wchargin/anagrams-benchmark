@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A corpus whose data is read from a file or other input stream, usually corresponding to a word
+ * list in some natural language.
+ */
 public class DictionaryCorpus implements Corpus {
     private final String name;
     private final List<String> words;

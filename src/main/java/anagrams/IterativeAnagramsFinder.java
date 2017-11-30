@@ -7,6 +7,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+/**
+ * An anagrams finder that uses idiomatic Java 7 iterative code to group strings into equivalence
+ * classes by their canonical forms.
+ */
 public class IterativeAnagramsFinder implements AnagramsFinder {
     @Override
     public Set<Set<String>> findAnagrams(Alphabetizer<?> alphabetizer, List<String> words, int

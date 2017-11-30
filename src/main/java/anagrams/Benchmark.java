@@ -11,6 +11,9 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.DoubleStream;
 
+/**
+ * A benchmark for various anagram-finding implementations on various corpora.
+ */
 public class Benchmark {
     private static final int MIN_GROUP_SIZE = 5;
     private static final long MINIMUM_RUNTIME = (long) 2e9;
