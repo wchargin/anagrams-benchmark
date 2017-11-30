@@ -21,6 +21,4 @@ repositories {
 jmh {
     include = 'anagrams\\.JMHBenchmark.*'
     humanOutputFile = null
-    warmupIterations = 1
-    iterations = 1
 }
