@@ -2,8 +2,10 @@ package anagrams;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,10 +25,16 @@ public class DictionaryCorpus implements Corpus {
     }
 
     public static DictionaryCorpus fromFile(File file) throws IOException {
-        final List<String> words = new BufferedReader(new FileReader(file)).lines().collect(Collectors.toList());
+        return fromInputStream(file.getName(), new FileInputStream(file));
+    }
+
+    public static DictionaryCorpus fromInputStream(String name, InputStream stream)
+            throws IOException {
+        final List<String> words = new BufferedReader(new InputStreamReader(stream))
+                .lines().collect(Collectors.toList());
         final boolean bmpOnly = words.stream().allMatch(word ->
                 word.codePoints().allMatch(Character::isBmpCodePoint));
-        return new DictionaryCorpus(file.getName(), words, bmpOnly);
+        return new DictionaryCorpus(name, words, bmpOnly);
     }
 
     @Override
