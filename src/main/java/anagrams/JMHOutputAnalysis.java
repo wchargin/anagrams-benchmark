@@ -225,8 +225,139 @@ class JMHOutputAnalysis {
                     describeCorpusBehavior(c);
                     indentation.dedent();
                 });
+                System.out.print("\n\n");
+
+                final List<BenchmarkParameters.AlphabetizerSpecification> alphabetizers =
+                        trials.keySet().stream().map(x -> x.alphabetizer).distinct().sorted()
+                                .collect(Collectors.toList());
+                final String algorithmTitle = "Analysis by alphabetization algorithm";
+                System.out.println(algorithmTitle);
+                System.out.println(constantString('=', algorithmTitle.length()));
+                alphabetizers.forEach(a -> {
+                    System.out.println();
+                    final String title = "Analyzing algorithm: " + a;
+                    System.out.println(title);
+                    System.out.println(constantString('-', title.length()));
+                    indentation.indent();
+                    describeAlphabetizerBehavior(a);
+                    indentation.dedent();
+                });
             } finally {
                 System.setOut(oldOut);
+            }
+        }
+
+        /**
+         * Describes the behavior of the provided algorithm on different corpora. This
+         * computes the average improvement due to using iteration instead of streams, and also
+         * displays the average times on each corpus and the differences between
+         * consecutively-ranked times.
+         *
+         * @param alphabetizer
+         *         an algorithm to analyze
+         */
+        private void describeAlphabetizerBehavior(
+                BenchmarkParameters.AlphabetizerSpecification alphabetizer) {
+            final List<UncertainQuantity> improvementsFromIteration = new ArrayList<>();
+            final List<BenchmarkParameters.CorpusSpecification> corpora = new ArrayList<>();
+            final List<UncertainQuantity> averageScores = new ArrayList<>();
+            final List<UncertainQuantity> averageNormalizedScores = new ArrayList<>();
+            // We'll compute "average time per <this many> words."
+            final int normalizationUnitWords = 1000;
+
+            for (BenchmarkParameters.CorpusSpecification corpus :
+                    BenchmarkParameters.CorpusSpecification.values()) {
+                final UncertainQuantity iterative = iterativeTime(alphabetizer, corpus);
+                final UncertainQuantity streamy = streamyTime(alphabetizer, corpus);
+                if (iterative == null || streamy == null) {
+                    continue;
+                }
+                // The benefit to the iterative version is the _extra_ time taken by the streamy
+                // version, so we subtract "streamy minus iterative".
+                corpora.add(corpus);
+                improvementsFromIteration.add(UncertainQuantity.difference(streamy, iterative));
+                averageScores.add(UncertainQuantity.mean(iterative, streamy));
+                averageNormalizedScores.add(
+                        UncertainQuantity.mean(iterative, streamy).scale(
+                                (double) normalizationUnitWords / corpus.size()));
+            }
+            if (improvementsFromIteration.isEmpty()) {
+                System.out.println("Insufficient data for meaningful answer.");
+                return;
+            }
+
+            final UncertainQuantity averageImprovement = UncertainQuantity.mean(
+                    improvementsFromIteration.toArray(new UncertainQuantity[0]));
+            System.out.println("Average improvement of iterative version over streamy version:");
+            System.out.printf("    %s %s (z-score: %s)%n",
+                    averageImprovement,
+                    units,
+                    Z_SCORE.format(averageImprovement.uncertaintyRatio()));
+            System.out.println("(Average taken with uniform weight across all corpora.)");
+
+            System.out.println();
+            System.out.println("Average performance for each corpus:");
+            final List<String> averageScoreStrings = UncertainQuantity.toStrings(averageScores);
+            for (int i = 0; i < corpora.size(); i++) {
+                final BenchmarkParameters.CorpusSpecification corpus = corpora.get(i);
+                System.out.printf("%s  %s %s  (corpus size: %d %s)%n",
+                        paddedEnum(corpus), averageScoreStrings.get(i), units,
+                        corpus.size(), corpus.size() == 1 ? "word" : "words");
+            }
+            System.out.println("(Remember that corpora are not equally sized.)");
+
+            System.out.println();
+            System.out.println("Average performance for each corpus, normalized by word count:");
+            final List<String> averageNormalizedScoreStrings =
+                    UncertainQuantity.toStrings(4, averageNormalizedScores);
+            for (int i = 0; i < corpora.size(); i++) {
+                final BenchmarkParameters.CorpusSpecification corpus = corpora.get(i);
+                System.out.printf("%s  %s %s per %d words%n",
+                        paddedEnum(corpus),
+                        averageNormalizedScoreStrings.get(i),
+                        units,
+                        normalizationUnitWords);
+            }
+            System.out.println("" +
+                    "(Remember that even after this normalization, corpora may have different " +
+                    "word-length distributions.)");
+
+            if (corpora.size() > 1) {
+                System.out.println();
+                System.out.println("Ranking, with consecutive-pair differences:");
+                final List<BenchmarkParameters.CorpusSpecification> sortedByTime =
+                        new ArrayList<>(corpora);
+                final Map<BenchmarkParameters.CorpusSpecification, Integer> originalIndex =
+                        new EnumMap<>(BenchmarkParameters.CorpusSpecification.class);
+                for (int i = 0; i < corpora.size(); i++) {
+                    originalIndex.put(corpora.get(i), i);
+                }
+                sortedByTime.sort(Comparator.comparing(
+                        x -> averageNormalizedScores.get(originalIndex.get(x))));
+                System.out.printf("%s  fastest%n", paddedEnum(sortedByTime.get(0)));
+                final List<UncertainQuantity> deltas = new ArrayList<>();
+                for (int i = 1; i < sortedByTime.size(); i++) {
+                    final BenchmarkParameters.CorpusSpecification here = sortedByTime.get(i);
+                    final BenchmarkParameters.CorpusSpecification previous =
+                            sortedByTime.get(i - 1);
+                    final UncertainQuantity delta = UncertainQuantity.difference(
+                            averageNormalizedScores.get(originalIndex.get(here)),
+                            averageNormalizedScores.get(originalIndex.get(previous)));
+                    deltas.add(delta);
+                }
+                final List<String> deltaStrings = UncertainQuantity.toStrings(4, deltas);
+                for (int i = 1; i < sortedByTime.size(); i++) {
+                    final int deltaIndex = i - 1;
+                    final UncertainQuantity delta = deltas.get(deltaIndex);
+                    final String deltaString = deltaStrings.get(deltaIndex);
+                    final double z = delta.uncertaintyRatio();
+                    System.out.printf("%s  slower by %s %s per %d words  (z-score: %s)%n",
+                            paddedEnum(sortedByTime.get(i)),
+                            deltaString,
+                            units,
+                            normalizationUnitWords,
+                            Z_SCORE.format(z));
+                }
             }
         }
 
