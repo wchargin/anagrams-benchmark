@@ -16,6 +16,9 @@ task legacyBenchmark(type: JavaExec) {
 task analyze(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'anagrams.JMHOutputAnalysis'
+    if (project.hasProperty('benchmarkOutput')) {
+        args = [benchmarkOutput]
+    }
 }
 
 sourceCompatibility = 1.8
