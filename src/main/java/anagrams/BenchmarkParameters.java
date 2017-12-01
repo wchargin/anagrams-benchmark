@@ -57,17 +57,27 @@ public final class BenchmarkParameters {
      * A choice of {@link Corpus} to be used in the benchmark.
      */
     public enum CorpusSpecification {
-        RANDOM_BMP(() -> RandomCorpus.bmpOnly(new Random(0))),
-        RANDOM_FULL(() -> RandomCorpus.fullSpectrum(new Random(0))),
-        SUPERCOLLIDER(SupercolliderCorpus::new),
-        NATURAL_ENGLISH(() -> dictionaryCorpus("english.txt")),
-        NATURAL_GREEK(() -> dictionaryCorpus("greek.txt")),
-        NATURAL_PHOENICIAN(() -> dictionaryCorpus("phoenician.txt"));
+        RANDOM_BMP(
+                () -> RandomCorpus.bmpOnly(new Random(0)),
+                1_000_000),
+        RANDOM_FULL(
+                () -> RandomCorpus.fullSpectrum(new Random(0)),
+                1_000_000),
+        SUPERCOLLIDER(
+                SupercolliderCorpus::new, 531441),
+        NATURAL_ENGLISH(
+                () -> dictionaryCorpus("english.txt"), 64001),
+        NATURAL_GREEK(
+                () -> dictionaryCorpus("greek.txt"), 530760),
+        NATURAL_PHOENICIAN(
+                () -> dictionaryCorpus("phoenician.txt"), 530760);
 
         private final Supplier<Corpus> supplier;
+        private final int corpusSize;
 
-        private CorpusSpecification(Supplier<Corpus> supplier) {
+        private CorpusSpecification(Supplier<Corpus> supplier, int corpusSize) {
             this.supplier = supplier;
+            this.corpusSize = corpusSize;
         }
 
         private static Corpus dictionaryCorpus(String filename) {
@@ -81,7 +91,19 @@ public final class BenchmarkParameters {
         }
 
         public Corpus newCorpus() {
-            return supplier.get();
+            final Corpus corpus = supplier.get();
+            final int actualSize = corpus.words().size();
+            if (corpus.words().size() != corpusSize) {
+                throw new AssertionError(
+                        String.format(
+                                "Corpus size mismatch: expected %s, got %s",
+                                corpusSize, actualSize));
+            }
+            return corpus;
+        }
+
+        public int size() {
+            return corpusSize;
         }
     }
 }
