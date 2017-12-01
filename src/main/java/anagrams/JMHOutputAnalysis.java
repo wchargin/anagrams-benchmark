@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -122,6 +121,69 @@ class JMHOutputAnalysis {
         private JMHOutput(Map<TrialKey, UncertainQuantity> trials, String units) {
             this.trials = Collections.unmodifiableMap(trials);
             this.units = units;
+        }
+
+        /**
+         * Print a nicely formatted table ranking the keys in order of ascending times, showing
+         * their consecutive differences and associated <i>z</i>-scores.
+         *
+         * @param keys
+         *         the objects to rank
+         * @param times
+         *         a list of times such that {@code times.get(i)} is the time for key
+         *         {@code keys.get(i)}
+         * @param units
+         *         the units of measurement for the {@code times}
+         * @param fractionDigits
+         *         the number of fractional digits to display for the times
+         * @param <E>
+         *         the key type
+         */
+        private static <E> void printRankingTable(
+                List<E> keys, List<UncertainQuantity> times, String units, int fractionDigits) {
+            if (keys.size() != times.size()) {
+                throw new IllegalArgumentException(
+                        String.format("Size mismatch: %d vs. %d", keys.size(), times.size()));
+            }
+            if (keys.isEmpty()) {
+                return;
+            }
+            final List<E> sortedByTime = new ArrayList<>(keys);
+            final Map<E, Integer> originalIndex = new HashMap<>();
+            for (int i = 0; i < keys.size(); i++) {
+                originalIndex.put(keys.get(i), i);
+            }
+            sortedByTime.sort(Comparator.comparing(x -> times.get(originalIndex.get(x))));
+
+            final int minimumLength = keys.stream()
+                    .mapToInt(x -> x.toString().length()).max()
+                    .orElseThrow(() -> new AssertionError("Empty keys?"));
+            System.out.printf("%s  fastest%n", padded(
+                    sortedByTime.get(0).toString(), minimumLength));
+
+            final List<UncertainQuantity> deltas = new ArrayList<>();
+            for (int i = 1; i < sortedByTime.size(); i++) {
+                final E here = sortedByTime.get(i);
+                final E previous = sortedByTime.get(i - 1);
+                final UncertainQuantity delta = UncertainQuantity.difference(
+                        times.get(originalIndex.get(here)),
+                        times.get(originalIndex.get(previous)));
+                deltas.add(delta);
+            }
+            final List<String> deltaStrings = UncertainQuantity.toStrings(
+                    fractionDigits, deltas);
+
+            for (int i = 1; i < sortedByTime.size(); i++) {
+                final int deltaIndex = i - 1;
+                final UncertainQuantity delta = deltas.get(deltaIndex);
+                final String deltaString = deltaStrings.get(deltaIndex);
+                final double z = delta.uncertaintyRatio();
+                System.out.printf("%s  slower by %s %s (z-score: %s)%n",
+                        padded(sortedByTime.get(i).toString(), minimumLength),
+                        deltaString,
+                        units,
+                        Z_SCORE.format(z));
+            }
         }
 
         /**
@@ -279,22 +341,10 @@ class JMHOutputAnalysis {
             if (sortedByTime.size() > 1) {
                 System.out.println();
                 System.out.println("Consecutive differences:");
-                System.out.printf("%s  fastest%n", paddedEnum(sortedByTime.get(0)));
-                final List<UncertainQuantity> deltas = new ArrayList<>();
-                for (int i = 1; i < sortedByTime.size(); i++) {
-                    deltas.add(UncertainQuantity.difference(
-                            meanTimes.get(sortedByTime.get(i)),
-                            meanTimes.get(sortedByTime.get(i - 1))));
-                }
-                final List<String> deltaStrings = UncertainQuantity.toStrings(deltas);
-                for (int i = 1; i < sortedByTime.size(); i++) {
-                    final int deltaIndex = i - 1;
-                    System.out.printf("%s  slower by %s %s  (z-score: %s)%n",
-                            paddedEnum(sortedByTime.get(i)),
-                            deltaStrings.get(deltaIndex),
-                            units,
-                            Z_SCORE.format(deltas.get(deltaIndex).uncertaintyRatio()));
-                }
+                printRankingTable(sortedByTime,
+                        sortedByTime.stream().map(meanTimes::get).collect(Collectors.toList()),
+                        units,
+                        2);
             }
         }
 
@@ -376,39 +426,9 @@ class JMHOutputAnalysis {
             if (corpora.size() > 1) {
                 System.out.println();
                 System.out.println("Ranking, with consecutive-pair differences:");
-                final List<BenchmarkParameters.CorpusSpecification> sortedByTime =
-                        new ArrayList<>(corpora);
-                final Map<BenchmarkParameters.CorpusSpecification, Integer> originalIndex =
-                        new EnumMap<>(BenchmarkParameters.CorpusSpecification.class);
-                for (int i = 0; i < corpora.size(); i++) {
-                    originalIndex.put(corpora.get(i), i);
-                }
-                sortedByTime.sort(Comparator.comparing(
-                        x -> averageNormalizedScores.get(originalIndex.get(x))));
-                System.out.printf("%s  fastest%n", paddedEnum(sortedByTime.get(0)));
-                final List<UncertainQuantity> deltas = new ArrayList<>();
-                for (int i = 1; i < sortedByTime.size(); i++) {
-                    final BenchmarkParameters.CorpusSpecification here = sortedByTime.get(i);
-                    final BenchmarkParameters.CorpusSpecification previous =
-                            sortedByTime.get(i - 1);
-                    final UncertainQuantity delta = UncertainQuantity.difference(
-                            averageNormalizedScores.get(originalIndex.get(here)),
-                            averageNormalizedScores.get(originalIndex.get(previous)));
-                    deltas.add(delta);
-                }
-                final List<String> deltaStrings = UncertainQuantity.toStrings(4, deltas);
-                for (int i = 1; i < sortedByTime.size(); i++) {
-                    final int deltaIndex = i - 1;
-                    final UncertainQuantity delta = deltas.get(deltaIndex);
-                    final String deltaString = deltaStrings.get(deltaIndex);
-                    final double z = delta.uncertaintyRatio();
-                    System.out.printf("%s  slower by %s %s per %d words  (z-score: %s)%n",
-                            paddedEnum(sortedByTime.get(i)),
-                            deltaString,
-                            units,
-                            normalizationUnitWords,
-                            Z_SCORE.format(z));
-                }
+                printRankingTable(corpora, averageNormalizedScores,
+                        String.format("%s per %d words", units, normalizationUnitWords),
+                        4);
             }
         }
 
@@ -489,38 +509,7 @@ class JMHOutputAnalysis {
             if (keys.size() > 1) {
                 System.out.println();
                 System.out.println("Ranking, with consecutive-pair differences:");
-                final List<BenchmarkParameters.AlphabetizerSpecification> sortedByTime =
-                        new ArrayList<>(keys);
-                final Map<BenchmarkParameters.AlphabetizerSpecification, Integer> originalIndex =
-                        new EnumMap<>(BenchmarkParameters.AlphabetizerSpecification.class);
-                for (int i = 0; i < keys.size(); i++) {
-                    originalIndex.put(keys.get(i), i);
-                }
-                sortedByTime.sort(Comparator.comparing(
-                        x -> averageScores.get(originalIndex.get(x))));
-                System.out.printf("%s  fastest%n", paddedEnum(sortedByTime.get(0)));
-                final List<UncertainQuantity> deltas = new ArrayList<>();
-                for (int i = 1; i < sortedByTime.size(); i++) {
-                    final BenchmarkParameters.AlphabetizerSpecification here = sortedByTime.get(i);
-                    final BenchmarkParameters.AlphabetizerSpecification previous =
-                            sortedByTime.get(i - 1);
-                    final UncertainQuantity delta = UncertainQuantity.difference(
-                            averageScores.get(originalIndex.get(here)),
-                            averageScores.get(originalIndex.get(previous)));
-                    deltas.add(delta);
-                }
-                final List<String> deltaStrings = UncertainQuantity.toStrings(deltas);
-                for (int i = 1; i < sortedByTime.size(); i++) {
-                    final int deltaIndex = i - 1;
-                    final UncertainQuantity delta = deltas.get(deltaIndex);
-                    final String deltaString = deltaStrings.get(deltaIndex);
-                    final double z = delta.uncertaintyRatio();
-                    System.out.printf("%s  slower by %s %s  (z-score: %s)%n",
-                            paddedEnum(sortedByTime.get(i)),
-                            deltaString,
-                            units,
-                            Z_SCORE.format(z));
-                }
+                printRankingTable(keys, averageScores, units, 2);
             }
         }
 
