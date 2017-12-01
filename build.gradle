@@ -6,10 +6,17 @@ group 'anagrams-benchmark'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
-apply plugin: 'application'
 apply plugin: 'me.champeau.gradle.jmh'
 
-mainClassName = "anagrams.Benchmark"
+task legacyBenchmark(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'anagrams.Benchmark'
+}
+
+task analyze(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'anagrams.JMHOutputAnalysis'
+}
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8

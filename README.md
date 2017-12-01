@@ -9,7 +9,7 @@ much slower are the versions that work in all cases?
 
 ## Building and running
 
-Invoke `gradle build` or `gradle run` in the root directory.
+Invoke `./gradlew legacyBenchmark` in the root directory.
 
 ## Output
 
