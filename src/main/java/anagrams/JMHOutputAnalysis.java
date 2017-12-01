@@ -242,8 +242,59 @@ class JMHOutputAnalysis {
                     describeAlphabetizerBehavior(a);
                     indentation.dedent();
                 });
+
+                {
+                    System.out.println();
+                    final String title = "Overall analysis";
+                    System.out.println(title);
+                    System.out.println(constantString('=', title.length()));
+                    indentation.indent();
+                    describeOverall();
+                    indentation.dedent();
+                }
             } finally {
                 System.setOut(oldOut);
+            }
+        }
+
+        private void describeOverall() {
+            System.out.println("Average performance by algorithm, fastest to slowest:");
+            final Map<BenchmarkParameters.AlphabetizerSpecification, UncertainQuantity> meanTimes =
+                    trials.keySet().stream().collect(Collectors.groupingBy(x -> x.alphabetizer,
+                            Collectors.collectingAndThen(
+                                    Collectors.mapping(trials::get, Collectors.toList()),
+                                    UncertainQuantity::mean)));
+            final List<BenchmarkParameters.AlphabetizerSpecification> sortedByTime =
+                    meanTimes.keySet().stream()
+                            .sorted(Comparator.comparing(meanTimes::get))
+                            .collect(Collectors.toList());
+            final List<String> meanTimeStrings = UncertainQuantity.toStrings(
+                    sortedByTime.stream().map(meanTimes::get).collect(Collectors.toList()));
+            for (int i = 0; i < sortedByTime.size(); i++) {
+                System.out.printf("%s  %s %s%n",
+                        paddedEnum(sortedByTime.get(i)), meanTimeStrings.get(i), units);
+            }
+            System.out.println("(Weighted uniformly across corpus and iterative/streamy.)");
+
+            if (sortedByTime.size() > 1) {
+                System.out.println();
+                System.out.println("Consecutive differences:");
+                System.out.printf("%s  fastest%n", paddedEnum(sortedByTime.get(0)));
+                final List<UncertainQuantity> deltas = new ArrayList<>();
+                for (int i = 1; i < sortedByTime.size(); i++) {
+                    deltas.add(UncertainQuantity.difference(
+                            meanTimes.get(sortedByTime.get(i)),
+                            meanTimes.get(sortedByTime.get(i - 1))));
+                }
+                final List<String> deltaStrings = UncertainQuantity.toStrings(deltas);
+                for (int i = 1; i < sortedByTime.size(); i++) {
+                    final int deltaIndex = i - 1;
+                    System.out.printf("%s  slower by %s %s  (z-score: %s)%n",
+                            paddedEnum(sortedByTime.get(i)),
+                            deltaStrings.get(deltaIndex),
+                            units,
+                            Z_SCORE.format(deltas.get(deltaIndex).uncertaintyRatio()));
+                }
             }
         }
 
