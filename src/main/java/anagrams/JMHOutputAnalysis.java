@@ -2,10 +2,15 @@ package anagrams;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -14,11 +19,12 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.ToIntFunction;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 class JMHOutputAnalysis {
 
     private static final Pattern MANY_SPACE_PLUS_MINUS = Pattern.compile("[\\s±]+");
-    private static final DecimalFormat SIGNED_NUMBER = new DecimalFormat("+0.00;-0");
+    private static final DecimalFormat Z_SCORE = new DecimalFormat("+0.00;-0");
 
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
@@ -68,10 +74,40 @@ class JMHOutputAnalysis {
     }
 
     /**
+     * Converts {@code element} to a string that is left-padded with spaces until it is as long
+     * as the longest name of any enum constant of the same type.
+     *
+     * @param element
+     *         any non-{@code null} enum constant
+     * @param <E>
+     *         any enum type
+     * @return a string {@code spaces + element.toString()}, where every character in
+     * {@code spaces} is a space and the combined string has length the maximum value of
+     * {@code x.toString()} for any enum constant {@code x} of type {@code E}
+     */
+    private static <E extends Enum<E>> String paddedEnum(E element) {
+        Objects.requireNonNull(element);
+        @SuppressWarnings("unchecked") final Class<E> clazz = (Class<E>) element.getClass();
+        // The following call to `getAsInt` must succeed, because the type `E` has at least one
+        // enum constant: namely, `element`.
+        final int maxLength =
+                Arrays.stream(clazz.getEnumConstants())
+                        .map(E::toString).mapToInt(String::length).max()
+                        .getAsInt();
+        return padded(element.toString(), maxLength);
+    }
+
+    /**
      * A structured representation of (the important parts of) a file containing output from the
      * JMH benchmark.
      */
     private static class JMHOutput {
+        /**
+         * The number of standard deviations away from the mean that a quantity must be for it to
+         * be considered statistically significant.
+         */
+        private static final double SIGNIFICANCE_LEVEL = 3.0;
+
         /**
          * The average time per op for each trial.
          */
@@ -167,11 +203,208 @@ class JMHOutputAnalysis {
             return new JMHOutput(result, units.get());
         }
 
-        /**
-         * Analyzes the output and prints a description.
-         */
         public void describe() {
-            trials.forEach((k, v) -> System.out.printf("%s: %s %s%n", k, v, units));
+            final PrintStream oldOut = System.out;
+            final IndentingStream indentation = new IndentingStream(oldOut);
+            System.setOut(new PrintStream(indentation));
+
+            try {
+                final List<BenchmarkParameters.CorpusSpecification> corpora =
+                        trials.keySet().stream().map(x -> x.corpus).distinct().sorted()
+                                .collect(Collectors.toList());
+                final String corpusTitle = "Analysis by corpus";
+                System.out.println(corpusTitle);
+                System.out.println(constantString('=', corpusTitle.length()));
+
+                corpora.forEach(c -> {
+                    System.out.println();
+                    final String title = "Analyzing corpus: " + c;
+                    System.out.println(title);
+                    System.out.println(constantString('-', title.length()));
+                    indentation.indent();
+                    describeCorpusBehavior(c);
+                    indentation.dedent();
+                });
+            } finally {
+                System.setOut(oldOut);
+            }
+        }
+
+        private UncertainQuantity streamyTime(
+                BenchmarkParameters.AlphabetizerSpecification alphabetizer,
+                BenchmarkParameters.CorpusSpecification corpus) {
+            final TrialKey key = new TrialKey(
+                    corpus,
+                    BenchmarkParameters.AnagramsFinderSpecification.STREAMY,
+                    alphabetizer);
+            return trials.get(key);
+        }
+
+        private UncertainQuantity iterativeTime(
+                BenchmarkParameters.AlphabetizerSpecification alphabetizer,
+                BenchmarkParameters.CorpusSpecification corpus) {
+            final TrialKey key = new TrialKey(
+                    corpus,
+                    BenchmarkParameters.AnagramsFinderSpecification.ITERATIVE,
+                    alphabetizer);
+            return trials.get(key);
+        }
+
+
+        /**
+         * Describes the behavior of different algorithms on a specific corpus. For each
+         * algorithm, this computes and presents the timing difference between the iterative and
+         * streamy versions. Furthermore, this prints the average times for each algorithm, ranks
+         * the algorithms, and computes the amounts to which each algorithm is faster than the
+         * previous.
+         *
+         * @param corpus
+         *         a corpus to analyze
+         */
+        private void describeCorpusBehavior(BenchmarkParameters.CorpusSpecification corpus) {
+            final List<BenchmarkParameters.AlphabetizerSpecification> keys = new ArrayList<>();
+            final List<UncertainQuantity> improvementFromIteration = new ArrayList<>();
+            final List<UncertainQuantity> averageScores = new ArrayList<>();
+
+            for (BenchmarkParameters.AlphabetizerSpecification alphabetizer :
+                    BenchmarkParameters.AlphabetizerSpecification.values()) {
+                final UncertainQuantity iterative = iterativeTime(alphabetizer, corpus);
+                final UncertainQuantity streamy = streamyTime(alphabetizer, corpus);
+                if (iterative == null || streamy == null) {
+                    continue;
+                }
+                keys.add(alphabetizer);
+                // The benefit to the iterative version is the _extra_ time taken by the streamy
+                // version, so we subtract "streamy minus iterative".
+                improvementFromIteration.add(UncertainQuantity.difference(streamy, iterative));
+                averageScores.add(UncertainQuantity.mean(iterative, streamy));
+            }
+
+            // Display iteration improvement for each algorithm.
+            System.out.println("Improvement of iterative version over streamy version:");
+            final List<String> benefitStrings =
+                    UncertainQuantity.toStrings(improvementFromIteration);
+            for (int i = 0; i < keys.size(); i++) {
+                System.out.format("%s  %s %s  (z-score: %s)%n",
+                        paddedEnum(keys.get(i)),
+                        benefitStrings.get(i),
+                        units,
+                        Z_SCORE.format(improvementFromIteration.get(i).uncertaintyRatio()));
+            }
+
+            // Display average time per op for each algorithm.
+            System.out.println();
+            System.out.println("Average time per op:");
+            final List<String> averageScoreStrings = UncertainQuantity.toStrings(averageScores);
+            for (int i = 0; i < keys.size(); i++) {
+                System.out.format("%s  %s %s%n",
+                        paddedEnum(keys.get(i)), averageScoreStrings.get(i), units);
+            }
+            System.out.println(
+                    "(Averages taken by weighting iterative/streamy versions uniformly.)");
+
+            // Rank different algorithms by average time.
+            if (keys.size() > 1) {
+                System.out.println();
+                System.out.println("Ranking, with consecutive-pair differences:");
+                final List<BenchmarkParameters.AlphabetizerSpecification> sortedByTime =
+                        new ArrayList<>(keys);
+                final Map<BenchmarkParameters.AlphabetizerSpecification, Integer> originalIndex =
+                        new EnumMap<>(BenchmarkParameters.AlphabetizerSpecification.class);
+                for (int i = 0; i < keys.size(); i++) {
+                    originalIndex.put(keys.get(i), i);
+                }
+                sortedByTime.sort(Comparator.comparing(
+                        x -> averageScores.get(originalIndex.get(x))));
+                System.out.printf("%s  fastest%n", paddedEnum(sortedByTime.get(0)));
+                final List<UncertainQuantity> deltas = new ArrayList<>();
+                for (int i = 1; i < sortedByTime.size(); i++) {
+                    final BenchmarkParameters.AlphabetizerSpecification here = sortedByTime.get(i);
+                    final BenchmarkParameters.AlphabetizerSpecification previous =
+                            sortedByTime.get(i - 1);
+                    final UncertainQuantity delta = UncertainQuantity.difference(
+                            averageScores.get(originalIndex.get(here)),
+                            averageScores.get(originalIndex.get(previous)));
+                    deltas.add(delta);
+                }
+                final List<String> deltaStrings = UncertainQuantity.toStrings(deltas);
+                for (int i = 1; i < sortedByTime.size(); i++) {
+                    final int deltaIndex = i - 1;
+                    final UncertainQuantity delta = deltas.get(deltaIndex);
+                    final String deltaString = deltaStrings.get(deltaIndex);
+                    final double z = delta.uncertaintyRatio();
+                    System.out.printf("%s  slower by %s %s  (z-score: %s)%n",
+                            paddedEnum(sortedByTime.get(i)),
+                            deltaString,
+                            units,
+                            Z_SCORE.format(z));
+                }
+            }
+        }
+
+        /**
+         * A stream that adds indentation whenever a newline is printed. This is a bit of a hack,
+         * and certainly performs terribly, but we don't to generate tons of output and it is
+         * pretty convenient to just call {@link System#setOut(PrintStream)}.
+         */
+        private static class IndentingStream extends OutputStream {
+            /**
+             * The number of spaces per tab stop.
+             */
+            private static final int SHIFT_WIDTH = 4;
+
+            /**
+             * The backing stream, to which {@link #write(int)} defers.
+             */
+            private final OutputStream target;
+
+            /**
+             * The number of logical indentations (tab stops) currently active.
+             */
+            private int indentationLevel = 0;
+
+            /**
+             * True when the stream is initialized or when the last byte written was a newline. When
+             * a non-newline is written while this flag is set, the flag is cleared and indentation
+             * is written.
+             */
+            private boolean atBeginningOfLine = true;
+
+            public IndentingStream(OutputStream target) {
+                this.target = target;
+            }
+
+            /**
+             * Increases the indentation level by one.
+             */
+            public void indent() {
+                indentationLevel++;
+            }
+
+            /**
+             * Decreases the indentation level by one, if it is positive, or else does nothing.
+             */
+            public void dedent() {
+                indentationLevel = Math.max(indentationLevel - 1, 0);
+            }
+
+            private void writeIndent() throws IOException {
+                byte[] spaces = new byte[indentationLevel * SHIFT_WIDTH];
+                Arrays.fill(spaces, (byte) ' ');
+                target.write(spaces);
+            }
+
+            @Override
+            public void write(int i) throws IOException {
+                final byte b = (byte) (i & 0xFF);
+                if (b == '\n' || b == '\r') {
+                    atBeginningOfLine = true;
+                } else if (atBeginningOfLine) {
+                    writeIndent();
+                    atBeginningOfLine = false;
+                }
+                target.write(i);
+            }
         }
     }
 
