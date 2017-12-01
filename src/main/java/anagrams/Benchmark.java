@@ -1,14 +1,11 @@
 package anagrams;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
 /**
@@ -38,40 +35,24 @@ public class Benchmark {
 
     private static List<Corpus> makeCorpora() {
         System.out.println("Constructing corpora...");
-        final Random rng = new Random(0);
         final List<Corpus> corpora = new ArrayList<>();
-        System.out.println("--- Random, BMP only");
-        corpora.add(RandomCorpus.bmpOnly(rng));
-        System.out.println("--- Random, full spectrum");
-        corpora.add(RandomCorpus.fullSpectrum(rng));
-        System.out.println("--- Supercollider");
-        corpora.add(new SupercolliderCorpus());
-        try {
-            final String[] filenames = { "english.txt", "greek.txt", "phoenician.txt" };
-            for (final String filename : filenames) {
-                System.out.println("--- Natural language, " + filename);
-                corpora.add(DictionaryCorpus.fromFile(
-                        new File(Benchmark.class.getResource(filename).toURI())));
-            }
-        } catch (URISyntaxException | IOException e) {
-            throw new RuntimeException(e);
+        for (BenchmarkParameters.CorpusSpecification spec : BenchmarkParameters.CorpusSpecification.values()) {
+            System.out.println("--- " + spec);
+            corpora.add(spec.newCorpus());
         }
         return Collections.unmodifiableList(corpora);
     }
 
     private static List<Alphabetizer<?>> makeAlphabetizers() {
-        return Arrays.asList(
-                new BMPAlphabetizer(),
-                new ManualDecodeAlphabetizer(),
-                new ManualCodecAlphabetizer(),
-                new BuiltinDecodeAlphabetizer(),
-                new BuiltinCodecAlphabetizer());
+        return Arrays.stream(BenchmarkParameters.AlphabetizerSpecification.values())
+                .map(BenchmarkParameters.AlphabetizerSpecification::createAlphabetizer)
+                .collect(Collectors.toList());
     }
 
     private static List<AnagramsFinder> makeFinders() {
-        return Arrays.asList(
-                new StreamsAnagramFinder(),
-                new IterativeAnagramsFinder());
+        return Arrays.stream(BenchmarkParameters.AnagramsFinderSpecification.values())
+                .map(BenchmarkParameters.AnagramsFinderSpecification::createFinder)
+                .collect(Collectors.toList());
     }
 
     private static Set<Set<String>> referenceSolution(Corpus corpus) {
