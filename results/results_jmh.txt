@@ -1,0 +1,121 @@
+Benchmark                         (alphabetizerSpec)        (corpusSpec)  (finderSpec)  (minGroupSize)  Mode  Cnt     Score    Error  Units
+JMHBenchmark.alphabetizeAllWords           NAIVE_BMP          RANDOM_BMP       STREAMY               5  avgt   20   637.250 ±  3.512  ms/op
+JMHBenchmark.alphabetizeAllWords           NAIVE_BMP          RANDOM_BMP     ITERATIVE               5  avgt   20   633.018 ±  4.775  ms/op
+JMHBenchmark.alphabetizeAllWords           NAIVE_BMP         RANDOM_FULL       STREAMY               5  avgt   20   874.193 ±  5.826  ms/op
+JMHBenchmark.alphabetizeAllWords           NAIVE_BMP         RANDOM_FULL     ITERATIVE               5  avgt   20   869.264 ±  4.601  ms/op
+JMHBenchmark.alphabetizeAllWords           NAIVE_BMP       SUPERCOLLIDER       STREAMY               5  avgt   20   247.898 ±  0.798  ms/op
+JMHBenchmark.alphabetizeAllWords           NAIVE_BMP       SUPERCOLLIDER     ITERATIVE               5  avgt   20   253.205 ±  0.881  ms/op
+JMHBenchmark.alphabetizeAllWords           NAIVE_BMP     NATURAL_ENGLISH       STREAMY               5  avgt   20    22.352 ±  0.205  ms/op
+JMHBenchmark.alphabetizeAllWords           NAIVE_BMP     NATURAL_ENGLISH     ITERATIVE               5  avgt   20    22.110 ±  0.107  ms/op
+JMHBenchmark.alphabetizeAllWords           NAIVE_BMP       NATURAL_GREEK       STREAMY               5  avgt   20    58.742 ±  0.297  ms/op
+JMHBenchmark.alphabetizeAllWords           NAIVE_BMP       NATURAL_GREEK     ITERATIVE               5  avgt   20    58.434 ±  0.214  ms/op
+JMHBenchmark.alphabetizeAllWords           NAIVE_BMP  NATURAL_PHOENICIAN       STREAMY               5  avgt   20    74.927 ±  1.126  ms/op
+JMHBenchmark.alphabetizeAllWords           NAIVE_BMP  NATURAL_PHOENICIAN     ITERATIVE               5  avgt   20    74.912 ±  0.358  ms/op
+JMHBenchmark.alphabetizeAllWords       MANUAL_DECODE          RANDOM_BMP       STREAMY               5  avgt   20   791.435 ±  6.276  ms/op
+JMHBenchmark.alphabetizeAllWords       MANUAL_DECODE          RANDOM_BMP     ITERATIVE               5  avgt   20   778.285 ±  8.827  ms/op
+JMHBenchmark.alphabetizeAllWords       MANUAL_DECODE         RANDOM_FULL       STREAMY               5  avgt   20   875.493 ±  7.376  ms/op
+JMHBenchmark.alphabetizeAllWords       MANUAL_DECODE         RANDOM_FULL     ITERATIVE               5  avgt   20   852.770 ±  9.902  ms/op
+JMHBenchmark.alphabetizeAllWords       MANUAL_DECODE       SUPERCOLLIDER       STREAMY               5  avgt   20   340.969 ±  7.555  ms/op
+JMHBenchmark.alphabetizeAllWords       MANUAL_DECODE       SUPERCOLLIDER     ITERATIVE               5  avgt   20   355.372 ± 10.050  ms/op
+JMHBenchmark.alphabetizeAllWords       MANUAL_DECODE     NATURAL_ENGLISH       STREAMY               5  avgt   20    39.440 ±  0.830  ms/op
+JMHBenchmark.alphabetizeAllWords       MANUAL_DECODE     NATURAL_ENGLISH     ITERATIVE               5  avgt   20    34.906 ±  0.374  ms/op
+JMHBenchmark.alphabetizeAllWords       MANUAL_DECODE       NATURAL_GREEK       STREAMY               5  avgt   20   248.690 ±  6.756  ms/op
+JMHBenchmark.alphabetizeAllWords       MANUAL_DECODE       NATURAL_GREEK     ITERATIVE               5  avgt   20   242.055 ±  8.227  ms/op
+JMHBenchmark.alphabetizeAllWords       MANUAL_DECODE  NATURAL_PHOENICIAN       STREAMY               5  avgt   20   368.660 ±  1.173  ms/op
+JMHBenchmark.alphabetizeAllWords       MANUAL_DECODE  NATURAL_PHOENICIAN     ITERATIVE               5  avgt   20   387.234 ±  7.366  ms/op
+JMHBenchmark.alphabetizeAllWords        MANUAL_CODEC          RANDOM_BMP       STREAMY               5  avgt   20   811.009 ±  9.110  ms/op
+JMHBenchmark.alphabetizeAllWords        MANUAL_CODEC          RANDOM_BMP     ITERATIVE               5  avgt   20   796.189 ±  4.904  ms/op
+JMHBenchmark.alphabetizeAllWords        MANUAL_CODEC         RANDOM_FULL       STREAMY               5  avgt   20   853.728 ± 14.824  ms/op
+JMHBenchmark.alphabetizeAllWords        MANUAL_CODEC         RANDOM_FULL     ITERATIVE               5  avgt   20   837.547 ±  3.366  ms/op
+JMHBenchmark.alphabetizeAllWords        MANUAL_CODEC       SUPERCOLLIDER       STREAMY               5  avgt   20   359.040 ±  3.239  ms/op
+JMHBenchmark.alphabetizeAllWords        MANUAL_CODEC       SUPERCOLLIDER     ITERATIVE               5  avgt   20   356.933 ±  7.221  ms/op
+JMHBenchmark.alphabetizeAllWords        MANUAL_CODEC     NATURAL_ENGLISH       STREAMY               5  avgt   20    43.296 ±  2.098  ms/op
+JMHBenchmark.alphabetizeAllWords        MANUAL_CODEC     NATURAL_ENGLISH     ITERATIVE               5  avgt   20    38.699 ±  0.402  ms/op
+JMHBenchmark.alphabetizeAllWords        MANUAL_CODEC       NATURAL_GREEK       STREAMY               5  avgt   20   284.198 ±  4.976  ms/op
+JMHBenchmark.alphabetizeAllWords        MANUAL_CODEC       NATURAL_GREEK     ITERATIVE               5  avgt   20   288.432 ±  6.243  ms/op
+JMHBenchmark.alphabetizeAllWords        MANUAL_CODEC  NATURAL_PHOENICIAN       STREAMY               5  avgt   20   439.417 ±  1.962  ms/op
+JMHBenchmark.alphabetizeAllWords        MANUAL_CODEC  NATURAL_PHOENICIAN     ITERATIVE               5  avgt   20   474.064 ±  3.573  ms/op
+JMHBenchmark.alphabetizeAllWords      BUILTIN_DECODE          RANDOM_BMP       STREAMY               5  avgt   20   937.016 ±  5.365  ms/op
+JMHBenchmark.alphabetizeAllWords      BUILTIN_DECODE          RANDOM_BMP     ITERATIVE               5  avgt   20   931.071 ±  6.293  ms/op
+JMHBenchmark.alphabetizeAllWords      BUILTIN_DECODE         RANDOM_FULL       STREAMY               5  avgt   20  1006.255 ±  5.166  ms/op
+JMHBenchmark.alphabetizeAllWords      BUILTIN_DECODE         RANDOM_FULL     ITERATIVE               5  avgt   20  1015.741 ±  8.123  ms/op
+JMHBenchmark.alphabetizeAllWords      BUILTIN_DECODE       SUPERCOLLIDER       STREAMY               5  avgt   20   430.094 ± 22.162  ms/op
+JMHBenchmark.alphabetizeAllWords      BUILTIN_DECODE       SUPERCOLLIDER     ITERATIVE               5  avgt   20   420.585 ±  1.485  ms/op
+JMHBenchmark.alphabetizeAllWords      BUILTIN_DECODE     NATURAL_ENGLISH       STREAMY               5  avgt   20    44.631 ±  0.610  ms/op
+JMHBenchmark.alphabetizeAllWords      BUILTIN_DECODE     NATURAL_ENGLISH     ITERATIVE               5  avgt   20    43.527 ±  1.971  ms/op
+JMHBenchmark.alphabetizeAllWords      BUILTIN_DECODE       NATURAL_GREEK       STREAMY               5  avgt   20   395.947 ±  8.907  ms/op
+JMHBenchmark.alphabetizeAllWords      BUILTIN_DECODE       NATURAL_GREEK     ITERATIVE               5  avgt   20   404.458 ± 14.586  ms/op
+JMHBenchmark.alphabetizeAllWords      BUILTIN_DECODE  NATURAL_PHOENICIAN       STREAMY               5  avgt   20   641.413 ± 28.398  ms/op
+JMHBenchmark.alphabetizeAllWords      BUILTIN_DECODE  NATURAL_PHOENICIAN     ITERATIVE               5  avgt   20   651.110 ± 45.734  ms/op
+JMHBenchmark.alphabetizeAllWords       BUILTIN_CODEC          RANDOM_BMP       STREAMY               5  avgt   20   873.515 ±  6.429  ms/op
+JMHBenchmark.alphabetizeAllWords       BUILTIN_CODEC          RANDOM_BMP     ITERATIVE               5  avgt   20   900.574 ±  4.432  ms/op
+JMHBenchmark.alphabetizeAllWords       BUILTIN_CODEC         RANDOM_FULL       STREAMY               5  avgt   20   895.848 ±  8.048  ms/op
+JMHBenchmark.alphabetizeAllWords       BUILTIN_CODEC         RANDOM_FULL     ITERATIVE               5  avgt   20   940.486 ±  7.702  ms/op
+JMHBenchmark.alphabetizeAllWords       BUILTIN_CODEC       SUPERCOLLIDER       STREAMY               5  avgt   20   395.627 ±  1.109  ms/op
+JMHBenchmark.alphabetizeAllWords       BUILTIN_CODEC       SUPERCOLLIDER     ITERATIVE               5  avgt   20   390.214 ± 25.795  ms/op
+JMHBenchmark.alphabetizeAllWords       BUILTIN_CODEC     NATURAL_ENGLISH       STREAMY               5  avgt   20    40.072 ±  1.166  ms/op
+JMHBenchmark.alphabetizeAllWords       BUILTIN_CODEC     NATURAL_ENGLISH     ITERATIVE               5  avgt   20    40.227 ±  1.897  ms/op
+JMHBenchmark.alphabetizeAllWords       BUILTIN_CODEC       NATURAL_GREEK       STREAMY               5  avgt   20   297.829 ±  1.297  ms/op
+JMHBenchmark.alphabetizeAllWords       BUILTIN_CODEC       NATURAL_GREEK     ITERATIVE               5  avgt   20   297.002 ±  1.809  ms/op
+JMHBenchmark.alphabetizeAllWords       BUILTIN_CODEC  NATURAL_PHOENICIAN       STREAMY               5  avgt   20   455.889 ± 19.664  ms/op
+JMHBenchmark.alphabetizeAllWords       BUILTIN_CODEC  NATURAL_PHOENICIAN     ITERATIVE               5  avgt   20   429.842 ±  2.411  ms/op
+JMHBenchmark.baseline                      NAIVE_BMP          RANDOM_BMP       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                      NAIVE_BMP          RANDOM_BMP     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                      NAIVE_BMP         RANDOM_FULL       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                      NAIVE_BMP         RANDOM_FULL     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                      NAIVE_BMP       SUPERCOLLIDER       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                      NAIVE_BMP       SUPERCOLLIDER     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                      NAIVE_BMP     NATURAL_ENGLISH       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                      NAIVE_BMP     NATURAL_ENGLISH     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                      NAIVE_BMP       NATURAL_GREEK       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                      NAIVE_BMP       NATURAL_GREEK     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                      NAIVE_BMP  NATURAL_PHOENICIAN       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                      NAIVE_BMP  NATURAL_PHOENICIAN     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  MANUAL_DECODE          RANDOM_BMP       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  MANUAL_DECODE          RANDOM_BMP     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  MANUAL_DECODE         RANDOM_FULL       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  MANUAL_DECODE         RANDOM_FULL     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  MANUAL_DECODE       SUPERCOLLIDER       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  MANUAL_DECODE       SUPERCOLLIDER     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  MANUAL_DECODE     NATURAL_ENGLISH       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  MANUAL_DECODE     NATURAL_ENGLISH     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  MANUAL_DECODE       NATURAL_GREEK       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  MANUAL_DECODE       NATURAL_GREEK     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  MANUAL_DECODE  NATURAL_PHOENICIAN       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  MANUAL_DECODE  NATURAL_PHOENICIAN     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                   MANUAL_CODEC          RANDOM_BMP       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                   MANUAL_CODEC          RANDOM_BMP     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                   MANUAL_CODEC         RANDOM_FULL       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                   MANUAL_CODEC         RANDOM_FULL     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                   MANUAL_CODEC       SUPERCOLLIDER       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                   MANUAL_CODEC       SUPERCOLLIDER     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                   MANUAL_CODEC     NATURAL_ENGLISH       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                   MANUAL_CODEC     NATURAL_ENGLISH     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                   MANUAL_CODEC       NATURAL_GREEK       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                   MANUAL_CODEC       NATURAL_GREEK     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                   MANUAL_CODEC  NATURAL_PHOENICIAN       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                   MANUAL_CODEC  NATURAL_PHOENICIAN     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                 BUILTIN_DECODE          RANDOM_BMP       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                 BUILTIN_DECODE          RANDOM_BMP     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                 BUILTIN_DECODE         RANDOM_FULL       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                 BUILTIN_DECODE         RANDOM_FULL     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                 BUILTIN_DECODE       SUPERCOLLIDER       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                 BUILTIN_DECODE       SUPERCOLLIDER     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                 BUILTIN_DECODE     NATURAL_ENGLISH       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                 BUILTIN_DECODE     NATURAL_ENGLISH     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                 BUILTIN_DECODE       NATURAL_GREEK       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                 BUILTIN_DECODE       NATURAL_GREEK     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                 BUILTIN_DECODE  NATURAL_PHOENICIAN       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                 BUILTIN_DECODE  NATURAL_PHOENICIAN     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  BUILTIN_CODEC          RANDOM_BMP       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  BUILTIN_CODEC          RANDOM_BMP     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  BUILTIN_CODEC         RANDOM_FULL       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  BUILTIN_CODEC         RANDOM_FULL     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  BUILTIN_CODEC       SUPERCOLLIDER       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  BUILTIN_CODEC       SUPERCOLLIDER     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  BUILTIN_CODEC     NATURAL_ENGLISH       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  BUILTIN_CODEC     NATURAL_ENGLISH     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  BUILTIN_CODEC       NATURAL_GREEK       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  BUILTIN_CODEC       NATURAL_GREEK     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  BUILTIN_CODEC  NATURAL_PHOENICIAN       STREAMY               5  avgt    3    ≈ 10⁻⁶           ms/op
+JMHBenchmark.baseline                  BUILTIN_CODEC  NATURAL_PHOENICIAN     ITERATIVE               5  avgt    3    ≈ 10⁻⁶           ms/op
