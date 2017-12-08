@@ -7,6 +7,10 @@ while others work on any valid Unicode strings. The purpose of this
 repository is to determine the price that we pay for correctness: how
 much slower are the versions that work in all cases?
 
+See [the article “Encodings and Assumptions”][article] for more details.
+
+[article]: https://wchargin.github.io/posts/encodings-and-assumptions
+
 ## What's in the box
 
 This repository includes:
